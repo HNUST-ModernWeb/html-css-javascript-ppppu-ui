@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人信息卡片</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffd6e7 50%, #ffcce0 100%);
+            font-family: 'PingFang SC', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
+            transition: background 0.5s ease;
+        }
+
+        body.theme-pink {
+            background: linear-gradient(135deg, #ffeef8 0%, #ffd6e7 50%, #ffcce0 100%);
+        }
+
+        body.theme-rose {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4ec 50%, #ffd1dc 100%);
+        }
+
+        body.theme-coral {
+            background: linear-gradient(135deg, #fff0eb 0%, #ffe0d4 50%, #ffd0c0 100%);
+        }
+
+        body.theme-peach {
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 50%, #ffdcc8 100%);
+        }
+
+        body.theme-lavender {
+            background: linear-gradient(135deg, #f5f0ff 0%, #e8e0ff 50%, #dcd0ff 100%);
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .page-title {
+            color: #e91e63;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(233, 30, 99, 0.15);
+            animation: fadeInDown 0.6s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 45px 40px;
+            width: 420px;
+            box-shadow: 0 25px 80px rgba(233, 30, 99, 0.2);
+            animation: fadeInUp 0.6s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(255, 182, 193, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 90px rgba(233, 30, 99, 0.25);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 30px;
+        }
+
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            box-shadow: 0 8px 30px rgba(233, 30, 99, 0.25);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .avatar:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 40px rgba(233, 30, 99, 0.35);
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+        }
+
+        .avatar-upload:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.5);
+        }
+
+        .avatar-upload svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        #avatarInput {
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem;
+            color: #888;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ffe4ec;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #fffafc;
+            color: #555;
+        }
+
+        .form-group input:hover,
+        .form-group textarea:hover {
+            border-color: #ffb6c1;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 90px;
+            border-radius: 15px;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.35);
+            letter-spacing: 2px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(233, 30, 99, 0.45);
+        }
+
+        .btn-save:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-save.saving {
+            background: #ccc;
+            pointer-events: none;
+        }
+
+        .toast {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            color: white;
+            padding: 16px 36px;
+            border-radius: 25px;
+            font-weight: 500;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            letter-spacing: 1px;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .theme-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .theme-btn.active {
+            border-width: 4px;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.5);
+        }
+
+        .theme-btn.pink { background: linear-gradient(135deg, #ff6b9d, #ffcce0); }
+        .theme-btn.rose { background: linear-gradient(135deg, #ffb6c1, #ffc0cb); }
+        .theme-btn.coral { background: linear-gradient(135deg, #ffd0c0, #ffe4dc); }
+        .theme-btn.peach { background: linear-gradient(135deg, #ffdcc8, #ffe8dc); }
+        .theme-btn.lavender { background: linear-gradient(135deg, #dcd0ff, #e8e0ff); }
+
+        .info-display {
+            text-align: left;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff5f8 0%, #ffeef4 100%);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #ffe4ec;
+        }
+
+        .info-display p {
+            margin: 10px 0;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        .info-display .label {
+            font-weight: 600;
+            color: #e91e63;
+        }
+
+        .edit-mode .info-display {
+            display: none;
+        }
+
+        .view-mode .form-group {
+            display: none;
+        }
+
+        .view-mode .btn-save {
+            display: none;
+        }
+
+        .btn-edit {
+            width: 48%;
+            padding: 14px;
+            background: white;
+            color: #e91e63;
+            border: 2px solid #ffb6c1;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            margin-right: 4%;
+            letter-spacing: 1px;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.35);
+        }
+
+        .view-mode .btn-edit {
+            display: inline-block;
+        }
+
+        .edit-mode .btn-edit {
+            display: none;
+        }
+
+        @media (max-width: 450px) {
+            .card {
+                width: 92%;
+                padding: 35px 25px;
+            }
+            .page-title {
+                font-size: 1.8rem;
+            }
+            .theme-switcher {
+                top: 15px;
+                right: 15px;
+                gap: 8px;
+            }
+            .theme-btn {
+                width: 36px;
+                height: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-switcher">
+        <button class="theme-btn pink active" data-theme="pink" title="少女粉"></button>
+        <button class="theme-btn rose" data-theme="rose" title="玫瑰粉"></button>
+        <button class="theme-btn coral" data-theme="coral" title="珊瑚色"></button>
+        <button class="theme-btn peach" data-theme="peach" title="蜜桃色"></button>
+        <button class="theme-btn lavender" data-theme="lavender" title="薰衣草"></button>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">个人信息卡片</h1>
+        
+        <div class="card" id="profileCard">
+            <div class="avatar-container">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" 
+                     alt="头像" 
+                     class="avatar" 
+                     id="avatarImg"
+                     title="点击上传头像">
+                <label class="avatar-upload" for="avatarInput" title="更换头像">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 12m-3.2 0a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0"/>
+                        <path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                    </svg>
+                </label>
+                <input type="file" id="avatarInput" accept="image/*">
+            </div>
+
+            <div class="info-display" id="infoDisplay">
+                <p><span class="label">姓名：</span><span id="displayName">小美</span></p>
+                <p><span class="label">简介：</span><span id="displayBio">喜欢粉色的小仙女~</span></p>
+            </div>
+
+            <div class="form-group">
+                <label for="nameInput">姓名</label>
+                <input type="text" id="nameInput" placeholder="请输入您的姓名" maxlength="20">
+            </div>
+
+            <div class="form-group">
+                <label for="bioInput">个人简介</label>
+                <textarea id="bioInput" placeholder="请输入个人简介" maxlength="200"></textarea>
+            </div>
+
+            <button class="btn-edit" id="btnEdit">编辑资料</button>
+            <button class="btn-save" id="btnSave">保存修改</button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">保存成功！</div>
+
+    <script>
+        const avatarImg = document.getElementById('avatarImg');
+        const avatarInput = document.getElementById('avatarInput');
+        const nameInput = document.getElementById('nameInput');
+        const bioInput = document.getElementById('bioInput');
+        const displayName = document.getElementById('displayName');
+        const displayBio = document.getElementById('displayBio');
+        const btnSave = document.getElementById('btnSave');
+        const btnEdit = document.getElementById('btnEdit');
+        const profileCard = document.getElementById('profileCard');
+        const toast = document.getElementById('toast');
+
+        let isEditMode = false;
+
+        avatarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    avatarImg.src = event.target.result;
+                    showToast('头像已更新！');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        avatarImg.addEventListener('click', function() {
+            avatarInput.click();
+        });
+
+        btnEdit.addEventListener('click', function() {
+            isEditMode = true;
+            profileCard.classList.add('edit-mode');
+            profileCard.classList.remove('view-mode');
+            nameInput.value = displayName.textContent;
+            bioInput.value = displayBio.textContent;
+            nameInput.focus();
+        });
+
+        btnSave.addEventListener('click', function() {
+            const name = nameInput.value.trim();
+            const bio = bioInput.value.trim();
+
+            if (!name) {
+                nameInput.focus();
+                return;
+            }
+
+            btnSave.textContent = '保存中...';
+            btnSave.classList.add('saving');
+
+            setTimeout(() => {
+                displayName.textContent = name;
+                displayBio.textContent = bio || '这个人很懒，什么都没有留下~';
+                
+                btnSave.textContent = '保存修改';
+                btnSave.classList.remove('saving');
+                isEditMode = false;
+                profileCard.classList.remove('edit-mode');
+                profileCard.classList.add('view-mode');
+                
+                showToast('保存成功！');
+            }, 500);
+        });
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const theme = this.dataset.theme;
+                document.body.className = '';
+                document.body.classList.add('theme-' + theme);
+            });
+        });
+
+        document.body.classList.add('theme-pink');
+        profileCard.classList.add('view-mode');
+    </script>
+</body>
+</html>
